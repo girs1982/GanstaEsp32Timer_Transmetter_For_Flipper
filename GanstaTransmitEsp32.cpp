@@ -56,7 +56,6 @@ void GanstaTransmitEsp32::addEncoderAction(bool state, uint32_t duration) {
         _totalActions++;
     }
 }
-
 // Отправка пакета данных с указанием количества повторов
 void GanstaTransmitEsp32::sendPacketStarline(byte* data, int length, int repeats) {
     if (_busy) {
@@ -137,6 +136,73 @@ void GanstaTransmitEsp32::sendPacketKeeloq(byte* data, int length, int repeats) 
     addEncoderAction(true, 400);  // Пин в HIGH, задержка 1000 мкс
     addEncoderAction(false, 40*400); // Пин в LOW, задержка 1000 мкс
 
+    // Запускаем таймер с первым действием
+    if (_totalActions > 0) {
+        _busy = true;  // Устанавливаем флаг busy
+        timerAlarmWrite(_timer, _encoder[0].duration, true);
+        timerAlarmEnable(_timer);  // Включаем таймер
+    }
+}
+// Отправка пакета данных с указанием количества повторов
+void GanstaTransmitEsp32::sendPacketNice(long Code,  int repeats) {
+    if (_busy) {
+        // Если передача идет, пропускаем выполнение
+        return;
+    }
+    _repeatCount = repeats;
+    _totalActions = 0;
+    _currentAction = 0;
+    ///стартовый импульс     
+        addEncoderAction(true, 700);
+        addEncoderAction(false, 0);    
+    // Преобразование данных в последовательность действий
+   for (int i = 24; i > 0; i--) {
+      byte b = bitRead(Code, i - 1); // побитово перебираем и посылаем код
+      if (b) {
+         addEncoderAction(false, 1400);    
+          addEncoderAction(true, 700);  
+      }
+      else {
+     addEncoderAction(false, 700);    
+      addEncoderAction(true, 1400);  
+      }
+   }
+
+     addEncoderAction(false, 1850); 
+    
+    // Запускаем таймер с первым действием
+    if (_totalActions > 0) {
+        _busy = true;  // Устанавливаем флаг busy
+        timerAlarmWrite(_timer, _encoder[0].duration, true);
+        timerAlarmEnable(_timer);  // Включаем таймер
+    }
+}
+
+void GanstaTransmitEsp32::sendPacketCame(long Code,  int repeats) {
+    if (_busy) {
+        // Если передача идет, пропускаем выполнение
+        return;
+    }
+    _repeatCount = repeats;
+    _totalActions = 0;
+    _currentAction = 0;
+    ///стартовый импульс     
+        addEncoderAction(true, 320);
+        addEncoderAction(false, 0);    
+    // Преобразование данных в последовательность действий
+   for (int i = 12; i > 0; i--) {
+      byte b = bitRead(Code, i - 1); // побитово перебираем и посылаем код
+      if (b) {
+         addEncoderAction(false, 640);    
+          addEncoderAction(true, 320);  
+      }
+      else {
+     addEncoderAction(false, 320);    
+      addEncoderAction(true, 640);  
+      }
+   }
+     addEncoderAction(false, 11520); 
+    
     // Запускаем таймер с первым действием
     if (_totalActions > 0) {
         _busy = true;  // Устанавливаем флаг busy
