@@ -19,8 +19,8 @@ starline_code1[3]=random(0,255);\
 transmitterGansta.sendPacketStarline(starline_code1,8,30);\
 delay(3000);\
 //cc1101.setIdle();\
-}\
+}
 
 
-//# GanstaEsp32Timer_Transmetter_For_Flipper\
-//GanstaEsp32Timer_Transmetter_For_Flipper\
+//# GanstaEsp32Timer_Transmetter_For_Flipper
+//GanstaEsp32Timer_Transmetter_For_Flipper
