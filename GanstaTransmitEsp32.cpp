@@ -100,3 +100,47 @@ void GanstaTransmitEsp32::sendPacketStarline(byte* data, int length, int repeats
 bool GanstaTransmitEsp32::isBusy() {
     return _busy;
 }
+// Отправка пакета данных с указанием количества повторов
+void GanstaTransmitEsp32::sendPacketKeeloq(byte* data, int length, int repeats) {
+    if (_busy) {
+        // Если передача идет, пропускаем выполнение
+        return;
+    }
+    _repeatCount = repeats;
+    _totalActions = 0;
+    _currentAction = 0;
+    // Заполняем массив с действиями для преамбулы
+    for (int i = 11; i > 0; i--) {  // Преамбула
+        addEncoderAction(true, 400);
+        addEncoderAction(false, 400);
+    }
+      addEncoderAction(true, 400);
+      addEncoderAction(false, 400*10);
+    // Преобразование данных в последовательность действий
+    for (int i = 0; i < length; i++) {
+        byte currentByte = data[i];
+        for (int j = 7; j >= 0; j--) {  // От 7 до 0 битов
+            bool bitState = currentByte & (1 << j);
+            if (bitState) {
+                addEncoderAction(true, 400);
+                addEncoderAction(false, 2*400);
+            } else {
+                addEncoderAction(true, 2*400);
+                addEncoderAction(false, 400);
+            }
+        }
+    }
+    // Добавляем в конце посылки дополнительные импульсы HIGH и LOW
+    addEncoderAction(true, 400);  // Пин в HIGH, задержка 1000 мкс
+    addEncoderAction(false, 2*400); // Пин в LOW, задержка 1000 мкс
+
+    addEncoderAction(true, 400);  // Пин в HIGH, задержка 1000 мкс
+    addEncoderAction(false, 40*400); // Пин в LOW, задержка 1000 мкс
+
+    // Запускаем таймер с первым действием
+    if (_totalActions > 0) {
+        _busy = true;  // Устанавливаем флаг busy
+        timerAlarmWrite(_timer, _encoder[0].duration, true);
+        timerAlarmEnable(_timer);  // Включаем таймер
+    }
+}
