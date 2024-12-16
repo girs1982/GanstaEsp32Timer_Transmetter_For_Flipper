@@ -11,6 +11,7 @@ public:
     void begin();
     // Отправка пакета данных с указанием количества повторов
     void sendPacketStarline(byte* data, int length, int repeats);
+    void sendPacketKeeloq(byte* data, int length, int repeats);
     // Проверка занятости передатчика
     bool isBusy();
 
