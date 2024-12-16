@@ -12,6 +12,8 @@ public:
     // Отправка пакета данных с указанием количества повторов
     void sendPacketStarline(byte* data, int length, int repeats);
     void sendPacketKeeloq(byte* data, int length, int repeats);
+    void sendPacketNice(long Code, int repeats);
+     void sendPacketCame(long Code, int repeats);
     // Проверка занятости передатчика
     bool isBusy();
 
