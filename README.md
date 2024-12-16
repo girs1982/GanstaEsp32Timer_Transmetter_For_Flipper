@@ -25,4 +25,4 @@ delay(3000);\
 //# GanstaEsp32Timer_Transmetter_For_Flipper
 //GanstaEsp32Timer_Transmetter_For_Flipper
 
-[![Watch the video][ https://www.youtube.com/shorts/pRmviXqQyQk](https://youtube.com/shorts/pRmviXqQyQk?si=ApTIJM49Y5WkIkAI)
+[![IMAGE ALT TEXT HERE][ https://www.youtube.com/shorts/pRmviXqQyQk](https://youtube.com/shorts/pRmviXqQyQk?si=ApTIJM49Y5WkIkAI)
